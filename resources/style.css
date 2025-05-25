@@ -1,0 +1,42 @@
+/* Warna latar belakang utama */
+QWidget {
+    background-color: #f2f6f9;
+    font-family: Arial;
+    font-size: 14px;
+}
+
+/* Style produk */
+#productItem {
+    background-color: #ffffff;
+    border: 1px solid #d0dfe8;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+/* Tombol lokasi */
+QPushButton#lokasiButton {
+    background-color: #5dade2;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+}
+QPushButton#lokasiButton:hover {
+    background-color: #3498db;
+}
+
+/* List kategori */
+#kategoriList {
+    background-color: #ecf3f8;
+    border: none;
+}
+QListWidget::item {
+    background: #dceefa;
+    padding: 8px;
+    margin: 4px;
+    border-radius: 5px;
+}
+QListWidget::item:selected {
+    background: #58b4e9;
+    color: white;
+}

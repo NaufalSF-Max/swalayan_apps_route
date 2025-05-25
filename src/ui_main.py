@@ -3,19 +3,24 @@ import json
 import os
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
-    QScrollArea, QLineEdit, QListWidget, QListWidgetItem, QSizePolicy, QGridLayout, QListView
+    QScrollArea, QLineEdit, QListWidget, QListWidgetItem, QSizePolicy,
+    QGridLayout, QListView
 )
 from PyQt5.QtGui import QPixmap, QColor, QPalette
-from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtCore import Qt, QSize, QTimer
+
+from ui_map import MapWindow  # Import jendela peta
 
 class ProductItem(QWidget):
-    def __init__(self, product_data):
+    def __init__(self, product_data, parent_window=None):
         super().__init__()
         self.product_data = product_data
+        self.parent_window = parent_window
         self.init_ui()
 
     def init_ui(self):
         layout = QVBoxLayout()
+        layout.setSpacing(8)
 
         name_label = QLabel(self.product_data['nama'])
         name_label.setAlignment(Qt.AlignCenter)
@@ -26,16 +31,21 @@ class ProductItem(QWidget):
         image_label.setAlignment(Qt.AlignCenter)
 
         button = QPushButton("Lihat Lokasi")
+        button.setObjectName("lokasiButton")
         button.clicked.connect(self.lihat_lokasi)
 
         layout.addWidget(name_label)
         layout.addWidget(image_label)
         layout.addWidget(button)
         self.setLayout(layout)
-        self.setFixedSize(200, 250)  # Ukuran item produk tetap
+        self.setFixedSize(200, 250)
+        self.setObjectName("productItem")
 
     def lihat_lokasi(self):
-        print(f"Lokasi produk: {self.product_data['lokasi']}")
+        lokasi = self.product_data.get('lokasi')
+        if lokasi:
+            self.map_window = MapWindow(product_name=lokasi)
+            self.map_window.show()
 
 class MainWindow(QWidget):
     def __init__(self):
@@ -58,12 +68,20 @@ class MainWindow(QWidget):
             return products
 
     def init_ui(self):
+        self.setObjectName("mainWindow")
+        self.setStyleSheet(open("resources/style.css").read())
+
+        palette = self.palette()
+        palette.setColor(QPalette.Window, QColor("#f2f6f9"))
+        self.setPalette(palette)
+
         main_layout = QHBoxLayout(self)
 
-        # Sidebar Kategori
+        # Sidebar
         self.sidebar = QWidget()
-        self.sidebar.setMinimumWidth(200)
-        self.sidebar.setMaximumWidth(250)
+        self.sidebar.setMinimumWidth(255)
+        self.sidebar.setMaximumWidth(300)
+        self.sidebar.setStyleSheet("background-color: #f7fbfd;")
         sidebar_layout = QVBoxLayout(self.sidebar)
 
         self.search_input = QLineEdit()
@@ -74,17 +92,20 @@ class MainWindow(QWidget):
         self.kategori_list = QListWidget()
         self.kategori_list.setViewMode(QListView.IconMode)
         self.kategori_list.setSpacing(6)
-        self.kategori_list.setStyleSheet("QListWidget::item { border: 1px solid #ccc; padding: 5px; margin: 4px; border-radius: 4px; } QListWidget::item:selected { background: #0078d7; color: white; }")
+        self.kategori_list.setObjectName("kategoriList")
         self.kategori_list.itemClicked.connect(self.filter_by_kategori)
         sidebar_layout.addWidget(self.kategori_list)
 
         self.load_kategori()
 
-        # Area Grid Produk
+        # Area Produk
         self.scroll_area = QScrollArea()
         self.scroll_area.setWidgetResizable(True)
         self.grid_widget = QWidget()
         self.grid_layout = QGridLayout(self.grid_widget)
+        self.grid_layout.setContentsMargins(20, 20, 20, 20)
+        self.grid_layout.setSpacing(16)
+        self.grid_layout.setAlignment(Qt.AlignTop | Qt.AlignHCenter)
         self.scroll_area.setWidget(self.grid_widget)
 
         main_layout.addWidget(self.sidebar)
@@ -94,7 +115,7 @@ class MainWindow(QWidget):
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
-        self.populate_products()  # Update grid saat ukuran berubah
+        self.populate_products()
 
     def load_kategori(self):
         kategori_set = set()
@@ -135,23 +156,18 @@ class MainWindow(QWidget):
                 widget.setParent(None)
 
         width = self.scroll_area.viewport().width()
-        if width > 900:
-            columns = 3
-        elif width > 600:
-            columns = 2
-        else:
-            columns = 1
+        columns = 4 if width > 900 else 3 if width > 600 else 1
 
         row = col = 0
         for product in self.filtered_products:
-            item = ProductItem(product)
+            item = ProductItem(product, parent_window=self)
             self.grid_layout.addWidget(item, row, col)
             col += 1
             if col >= columns:
                 col = 0
                 row += 1
 
-        self.scroll_area.verticalScrollBar().setValue(0)  # Reset scroll ke atas
+        QTimer.singleShot(0, lambda: self.scroll_area.verticalScrollBar().setValue(0))
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
