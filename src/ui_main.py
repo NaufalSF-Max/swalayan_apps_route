@@ -1,103 +1,160 @@
-# src/ui_main.py
-
-import os
+import sys
 import json
+import os
 from PyQt5.QtWidgets import (
-    QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel,
-    QPushButton, QScrollArea, QFrame, QMessageBox
+    QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
+    QScrollArea, QLineEdit, QListWidget, QListWidgetItem, QSizePolicy, QGridLayout, QListView
 )
-from PyQt5.QtGui import QPixmap
-from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QPixmap, QColor, QPalette
+from PyQt5.QtCore import Qt, QSize
 
+class ProductItem(QWidget):
+    def __init__(self, product_data):
+        super().__init__()
+        self.product_data = product_data
+        self.init_ui()
+
+    def init_ui(self):
+        layout = QVBoxLayout()
+
+        name_label = QLabel(self.product_data['nama'])
+        name_label.setAlignment(Qt.AlignCenter)
+
+        image_label = QLabel()
+        pixmap = QPixmap(self.product_data['gambar'])
+        image_label.setPixmap(pixmap.scaled(120, 120, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+        image_label.setAlignment(Qt.AlignCenter)
+
+        button = QPushButton("Lihat Lokasi")
+        button.clicked.connect(self.lihat_lokasi)
+
+        layout.addWidget(name_label)
+        layout.addWidget(image_label)
+        layout.addWidget(button)
+        self.setLayout(layout)
+        self.setFixedSize(200, 250)  # Ukuran item produk tetap
+
+    def lihat_lokasi(self):
+        print(f"Lokasi produk: {self.product_data['lokasi']}")
 
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Aplikasi Peta Toko Swalayan")
+        self.setWindowTitle("Aplikasi Swalayan")
         self.resize(1000, 600)
-        self.initUI()
+        self.all_products = self.load_products()
+        self.filtered_products = self.all_products.copy()
+        self.selected_category = None
+        self.init_ui()
 
-    def initUI(self):
+    def load_products(self):
+        with open("data/produk.json", "r") as f:
+            data = json.load(f)
+            products = []
+            for kategori, daftar_produk in data.items():
+                for produk in daftar_produk:
+                    produk['kategori'] = kategori
+                    products.append(produk)
+            return products
+
+    def init_ui(self):
         main_layout = QHBoxLayout(self)
 
-        # Sidebar kategori
-        self.sidebar = QVBoxLayout()
-        self.sidebar.setSpacing(10)
-        self.sidebar.setAlignment(Qt.AlignTop)
+        # Sidebar Kategori
+        self.sidebar = QWidget()
+        self.sidebar.setMinimumWidth(200)
+        self.sidebar.setMaximumWidth(250)
+        sidebar_layout = QVBoxLayout(self.sidebar)
 
-        scroll_area = QScrollArea()
-        scroll_area.setWidgetResizable(True)
-        scroll_content = QWidget()
-        scroll_content.setLayout(self.sidebar)
-        scroll_area.setWidget(scroll_content)
+        self.search_input = QLineEdit()
+        self.search_input.setPlaceholderText("Cari produk...")
+        self.search_input.textChanged.connect(self.search_products)
+        sidebar_layout.addWidget(self.search_input)
 
-        # Grid produk
-        self.product_area = QVBoxLayout()
-        self.product_area.setAlignment(Qt.AlignTop)
+        self.kategori_list = QListWidget()
+        self.kategori_list.setViewMode(QListView.IconMode)
+        self.kategori_list.setSpacing(6)
+        self.kategori_list.setStyleSheet("QListWidget::item { border: 1px solid #ccc; padding: 5px; margin: 4px; border-radius: 4px; } QListWidget::item:selected { background: #0078d7; color: white; }")
+        self.kategori_list.itemClicked.connect(self.filter_by_kategori)
+        sidebar_layout.addWidget(self.kategori_list)
 
-        product_scroll = QScrollArea()
-        product_scroll.setWidgetResizable(True)
-        self.product_widget = QWidget()
-        self.product_widget.setLayout(self.product_area)
-        product_scroll.setWidget(self.product_widget)
+        self.load_kategori()
 
-        main_layout.addWidget(scroll_area, 2)
-        main_layout.addWidget(product_scroll, 5)
+        # Area Grid Produk
+        self.scroll_area = QScrollArea()
+        self.scroll_area.setWidgetResizable(True)
+        self.grid_widget = QWidget()
+        self.grid_layout = QGridLayout(self.grid_widget)
+        self.scroll_area.setWidget(self.grid_widget)
 
-        self.load_categories()
+        main_layout.addWidget(self.sidebar)
+        main_layout.addWidget(self.scroll_area)
 
-    def load_categories(self):
-        try:
-            with open("data/produk.json", "r", encoding="utf-8") as f:
-                self.produk_data = json.load(f)
-        except FileNotFoundError:
-            QMessageBox.critical(self, "Error", "File produk.json tidak ditemukan!")
-            return
+        self.populate_products()
 
-        self.sidebar_buttons = []
-        for kategori in self.produk_data:
-            btn = QPushButton(kategori)
-            btn.clicked.connect(lambda checked, k=kategori: self.show_products(k))
-            self.sidebar.addWidget(btn)
-            self.sidebar_buttons.append(btn)
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        self.populate_products()  # Update grid saat ukuran berubah
 
-    def show_products(self, kategori):
-        for i in reversed(range(self.product_area.count())):
-            widget = self.product_area.itemAt(i).widget()
+    def load_kategori(self):
+        kategori_set = set()
+        for p in self.all_products:
+            if isinstance(p, dict) and 'kategori' in p:
+                kategori_set.add(p['kategori'])
+
+        for kategori in sorted(kategori_set):
+            item = QListWidgetItem(kategori)
+            self.kategori_list.addItem(item)
+
+    def filter_by_kategori(self, item):
+        kategori = item.text()
+        if self.selected_category == kategori:
+            self.selected_category = None
+            self.filtered_products = self.all_products.copy()
+            self.kategori_list.clearSelection()
+        else:
+            self.selected_category = kategori
+            self.filtered_products = [p for p in self.all_products if p.get('kategori') == kategori]
+        self.search_input.clear()
+        self.populate_products()
+
+    def search_products(self):
+        keyword = self.search_input.text().lower()
+        if keyword:
+            self.filtered_products = [p for p in self.all_products if keyword in p.get('nama', '').lower()]
+            self.kategori_list.clearSelection()
+            self.selected_category = None
+        else:
+            self.filtered_products = self.all_products.copy()
+        self.populate_products()
+
+    def populate_products(self):
+        for i in reversed(range(self.grid_layout.count())):
+            widget = self.grid_layout.itemAt(i).widget()
             if widget:
-                widget.deleteLater()
+                widget.setParent(None)
 
-        produk_list = self.produk_data.get(kategori, [])
-        for produk in produk_list:
-            frame = QFrame()
-            frame.setFrameShape(QFrame.Box)
-            layout = QVBoxLayout()
-            layout.setAlignment(Qt.AlignCenter)
+        width = self.scroll_area.viewport().width()
+        if width > 900:
+            columns = 3
+        elif width > 600:
+            columns = 2
+        else:
+            columns = 1
 
-            # Nama Produk
-            nama = QLabel(produk["nama"])
-            nama.setAlignment(Qt.AlignCenter)
-            layout.addWidget(nama)
+        row = col = 0
+        for product in self.filtered_products:
+            item = ProductItem(product)
+            self.grid_layout.addWidget(item, row, col)
+            col += 1
+            if col >= columns:
+                col = 0
+                row += 1
 
-            # Gambar Produk
-            gambar_path = produk.get("gambar", "assets/placeholder.png")
-            if os.path.exists(gambar_path):
-                pixmap = QPixmap(gambar_path).scaled(150, 150, Qt.KeepAspectRatio)
-            else:
-                pixmap = QPixmap("assets/placeholder.png").scaled(150, 150, Qt.KeepAspectRatio)
+        self.scroll_area.verticalScrollBar().setValue(0)  # Reset scroll ke atas
 
-            gambar = QLabel()
-            gambar.setPixmap(pixmap)
-            gambar.setAlignment(Qt.AlignCenter)
-            layout.addWidget(gambar)
-
-            # Tombol Lihat Lokasi
-            btn_lokasi = QPushButton("Lihat Lokasi")
-            btn_lokasi.clicked.connect(lambda checked, lokasi=produk["lokasi"]: self.tunjukkan_lokasi(lokasi))
-            layout.addWidget(btn_lokasi)
-
-            frame.setLayout(layout)
-            self.product_area.addWidget(frame)
-
-    def tunjukkan_lokasi(self, lokasi):
-        QMessageBox.information(self, "Lokasi Produk", f"Produk ini berada di blok: {lokasi}")
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    sys.exit(app.exec_())

@@ -1,0 +1,89 @@
+{
+  "Buah-buahan Segar": [
+    {"nama": "Apel", "gambar": "assets/images/placeholder.png", "lokasi": "Buah"},
+    {"nama": "Pisang", "gambar": "assets/images/placeholder.png", "lokasi": "Buah"},
+    {"nama": "Jeruk", "gambar": "assets/images/placeholder.png", "lokasi": "Buah"},
+    {"nama": "Mangga", "gambar": "assets/images/placeholder.png", "lokasi": "Buah"},
+    {"nama": "Semangka", "gambar": "assets/images/placeholder.png", "lokasi": "Buah"}
+  ],
+  "Sayuran Segar": [
+    {"nama": "Wortel", "gambar": "assets/images/placeholder.png", "lokasi": "Sayuran"},
+    {"nama": "Brokoli", "gambar": "assets/images/placeholder.png", "lokasi": "Sayuran"},
+    {"nama": "Bayam", "gambar": "assets/images/placeholder.png", "lokasi": "Sayuran"},
+    {"nama": "Kangkung", "gambar": "assets/images/placeholder.png", "lokasi": "Sayuran"},
+    {"nama": "Sawi", "gambar": "assets/images/placeholder.png", "lokasi": "Sayuran"}
+  ],
+  "Produk Susu dan Olahan": [
+    {"nama": "Susu UHT", "gambar": "assets/images/placeholder.png", "lokasi": "Produk Susu dan Olahan"},
+    {"nama": "Yogurt", "gambar": "assets/images/placeholder.png", "lokasi": "Produk Susu dan Olahan"},
+    {"nama": "Keju", "gambar": "assets/images/placeholder.png", "lokasi": "Produk Susu dan Olahan"},
+    {"nama": "Susu Kental Manis", "gambar": "assets/images/placeholder.png", "lokasi": "Produk Susu dan Olahan"}
+  ],
+  "Peralatan Mandi": [
+    {"nama": "Sabun Mandi", "gambar": "assets/images/placeholder.png", "lokasi": "Peralatan Mandi"},
+    {"nama": "Sampo", "gambar": "assets/images/placeholder.png", "lokasi": "Peralatan Mandi"},
+    {"nama": "Pasta Gigi", "gambar": "assets/images/placeholder.png", "lokasi": "Peralatan Mandi"},
+    {"nama": "Tisu Basah", "gambar": "assets/images/placeholder.png", "lokasi": "Peralatan Mandi"}
+  ],
+  "Daging Segar": [
+    {"nama": "Daging Sapi", "gambar": "assets/images/placeholder.png", "lokasi": "Daging Segar"},
+    {"nama": "Daging Ayam", "gambar": "assets/images/placeholder.png", "lokasi": "Daging Segar"},
+    {"nama": "Daging Kambing", "gambar": "assets/images/placeholder.png", "lokasi": "Daging Segar"}
+  ],
+  "Makanan Siap Saji": [
+    {"nama": "Nasi Kotak", "gambar": "assets/images/placeholder.png", "lokasi": "Makanan Siap Saji"},
+    {"nama": "Mie Instan Cup", "gambar": "assets/images/placeholder.png", "lokasi": "Makanan Siap Saji"}
+  ],
+  "Roti dan Kue": [
+    {"nama": "Roti Tawar", "gambar": "assets/images/placeholder.png", "lokasi": "Roti dan Kue"},
+    {"nama": "Donat", "gambar": "assets/images/placeholder.png", "lokasi": "Roti dan Kue"}
+  ],
+  "Snack dan Cemilan": [
+    {"nama": "Keripik Kentang", "gambar": "assets/images/placeholder.png", "lokasi": "Snack dan Cemilan"},
+    {"nama": "Cokelat", "gambar": "assets/images/placeholder.png", "lokasi": "Snack dan Cemilan"}
+  ],
+  "Minuman": [
+    {"nama": "Air Mineral", "gambar": "assets/images/placeholder.png", "lokasi": "Minuman"},
+    {"nama": "Soda", "gambar": "assets/images/placeholder.png", "lokasi": "Minuman"}
+  ],
+  "Bumbu Dapur": [
+    {"nama": "Garam", "gambar": "assets/images/placeholder.png", "lokasi": "Bumbu Dapur"},
+    {"nama": "Merica", "gambar": "assets/images/placeholder.png", "lokasi": "Bumbu Dapur"}
+  ],
+  "Frozen Food": [
+    {"nama": "Sosis Beku", "gambar": "assets/images/placeholder.png", "lokasi": "Frozen Food"},
+    {"nama": "Nugget", "gambar": "assets/images/placeholder.png", "lokasi": "Frozen Food"}
+  ],
+  "Seafood": [
+    {"nama": "Ikan Salmon", "gambar": "assets/images/placeholder.png", "lokasi": "Seafood"},
+    {"nama": "Udang", "gambar": "assets/images/placeholder.png", "lokasi": "Seafood"}
+  ],
+  "Peralatan Rumah Tangga": [
+    {"nama": "Sapu", "gambar": "assets/images/placeholder.png", "lokasi": "Peralatan Rumah Tangga"},
+    {"nama": "Ember", "gambar": "assets/images/placeholder.png", "lokasi": "Peralatan Rumah Tangga"}
+  ],
+  "Makanan Kaleng": [
+    {"nama": "Sarden", "gambar": "assets/images/placeholder.png", "lokasi": "Makanan Kaleng"},
+    {"nama": "Kornet", "gambar": "assets/images/placeholder.png", "lokasi": "Makanan Kaleng"}
+  ],
+  "Bahan Pokok": [
+    {"nama": "Beras", "gambar": "assets/images/placeholder.png", "lokasi": "Bahan Pokok"},
+    {"nama": "Minyak Goreng", "gambar": "assets/images/placeholder.png", "lokasi": "Bahan Pokok"}
+  ],
+  "Obat-obatan dan Kesehatan": [
+    {"nama": "Paracetamol", "gambar": "assets/images/placeholder.png", "lokasi": "Obat-obatan dan Kesehatan"},
+    {"nama": "Masker", "gambar": "assets/images/placeholder.png", "lokasi": "Obat-obatan dan Kesehatan"}
+  ],
+  "Alat Tulis": [
+    {"nama": "Pulpen", "gambar": "assets/images/placeholder.png", "lokasi": "Alat Tulis"},
+    {"nama": "Buku Tulis", "gambar": "assets/images/placeholder.png", "lokasi": "Alat Tulis"}
+  ],
+  "Produk Kecantikan": [
+    {"nama": "Lipstik", "gambar": "assets/images/placeholder.png", "lokasi": "Produk Kecantikan"},
+    {"nama": "Bedak", "gambar": "assets/images/placeholder.png", "lokasi": "Produk Kecantikan"}
+  ],
+  "Bayi dan Anak": [
+    {"nama": "Popok", "gambar": "assets/images/placeholder.png", "lokasi": "Bayi dan Anak"},
+    {"nama": "Susu Formula", "gambar": "assets/images/placeholder.png", "lokasi": "Bayi dan Anak"}
+  ]
+}
