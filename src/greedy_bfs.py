@@ -6,50 +6,65 @@ class GreedyBFS:
     def __init__(self, graph_file):
         with open(graph_file, 'r') as f:
             data = json.load(f)
-        
+
         self.nodes = data['nodes']
         self.edges = data['edges']
         self.graph = self.build_graph()
 
     def build_graph(self):
         graph = {node: [] for node in self.nodes}
-        for edge in self.edges:
-            u, v, weight = edge
-            graph[u].append((v, weight))
-            graph[v].append((u, weight))  # Undirected
+        for u, v, w in self.edges:
+            graph[u].append((v, w))
+            graph[v].append((u, w))
         return graph
 
     def heuristic(self, a, b):
-        """Heuristic menggunakan jarak Euclidean dari node ke tujuan."""
         x1, y1 = self.nodes[a]
         x2, y2 = self.nodes[b]
-        return math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
+        return math.hypot(x1 - x2, y1 - y2)
 
     def greedy_bfs(self, start, goal):
         visited = set()
-        pq = [(self.heuristic(start, goal), start, [start])]  # (priority, node, path)
-
-        while pq:
-            _, current, path = heapq.heappop(pq)
+        heap = [(self.heuristic(start, goal), start, [start])]
+        while heap:
+            _, current, path = heapq.heappop(heap)
+            if current == goal:
+                return path
             if current in visited:
                 continue
             visited.add(current)
+            for neighbor, _ in self.graph.get(current, []):
+                if neighbor not in visited:
+                    heapq.heappush(heap, (self.heuristic(neighbor, goal), neighbor, path + [neighbor]))
+        return None
+
+    def a_star(self, start, goal):
+        open_set = [(0 + self.heuristic(start, goal), 0, start, [start])]  # (f, g, current, path)
+        visited = set()
+
+        while open_set:
+            f, g, current, path = heapq.heappop(open_set)
 
             if current == goal:
                 return path
 
-            for neighbor, _ in self.graph.get(current, []):
+            if current in visited:
+                continue
+            visited.add(current)
+
+            for neighbor, cost in self.graph.get(current, []):
                 if neighbor not in visited:
-                    heapq.heappush(pq, (self.heuristic(neighbor, goal), neighbor, path + [neighbor]))
-        
-        return None  # Jika tidak ditemukan
+                    new_g = g + cost
+                    new_f = new_g + self.heuristic(neighbor, goal)
+                    heapq.heappush(open_set, (new_f, new_g, neighbor, path + [neighbor]))
+
+        return None
 
     def find_nearest_node(self, x, y):
-        """Temukan simpul terdekat dari koordinat x, y untuk tujuan produk."""
         nearest = None
         min_dist = float('inf')
         for node, (nx, ny) in self.nodes.items():
-            dist = math.sqrt((nx - x)**2 + (ny - y)**2)
+            dist = math.hypot(x - nx, y - ny)
             if dist < min_dist:
                 nearest = node
                 min_dist = dist

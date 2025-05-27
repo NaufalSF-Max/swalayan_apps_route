@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtGui import QPixmap, QColor, QPalette
 from PyQt5.QtCore import Qt, QSize, QTimer
 
-from ui_map import MapWindow  # Import jendela peta
+from src.ui_map import MapWindow
 
 class ProductItem(QWidget):
     def __init__(self, product_data, parent_window=None):

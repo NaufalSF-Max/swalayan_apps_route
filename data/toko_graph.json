@@ -26,6 +26,14 @@
     ["T13", "T19", 1.0], ["T15", "T22", 1.0], ["T19", "T18", 1.0], ["T19", "T20", 1.5],
     ["T19", "T25", 1.0], ["T21", "T20", 1.5], ["T21", "T22", 1.5], ["T21", "T27", 1.0],
     ["T23", "T22", 1.5], ["T23", "T24", 1.0], ["T23", "T28", 1.0], ["T25", "T26", 1.5],
-    ["T27", "T26", 1.5], ["T28", "T27", 3.0], ["T20", "T26", 1.5]
+    ["T27", "T26", 1.5], ["T28", "T27", 3.0], ["T20", "T26", 1.5],
+
+    ["T5", "Makanan Siap Saji", 0.3], ["T4", "Sayuran", 0.3], ["T2", "Roti dan Kue", 0.3],
+    ["T3", "Snack dan Cemilan", 0.3], ["T9", "Daging Segar", 0.3], ["T5", "Minuman", 0.3],
+    ["T12", "Bumbu Dapur", 0.3], ["T7", "Produk Susu dan Olahan", 0.3], ["T8", "Frozen Food", 0.3],
+    ["T10", "Buah", 0.3], ["T11", "Seafood", 0.3], ["T13", "Peralatan Rumah Tangga", 0.3],
+    ["T20", "Makanan Kaleng", 0.3], ["T18", "Bahan Pokok", 0.3], ["T20", "Peralatan Mandi", 0.3],
+    ["T22", "Obat-obatan dan Kesehatan", 0.3], ["T16", "Alat Tulis", 0.3],
+    ["T24", "Produk Kecantikan", 0.3], ["T17", "Bayi dan Anak", 0.3]
   ]
 }

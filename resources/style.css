@@ -40,3 +40,16 @@ QListWidget::item:selected {
     background: #58b4e9;
     color: white;
 }
+
+QPushButton#backButton {
+    background-color: #dfeffc;
+    color: #1e3a5f;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 1px solid #9cb4d8;
+    font-weight: bold;
+}
+
+QPushButton#backButton:hover {
+    background-color: #cfe0fa;
+}
